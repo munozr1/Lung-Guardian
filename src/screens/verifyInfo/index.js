@@ -247,7 +247,7 @@ export const VerifyInfoScreen= ({navigation}) => {
                   }
 
                     <ButtonLarge
-                    text='Finish'
+                    text='Submit'
                   style={[styles.lrgbtn, { marginTop: 50, }]}
                     run={finalize}
                     />    
