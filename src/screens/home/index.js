@@ -3,6 +3,7 @@ import {Image, TouchableOpacity, StyleSheet, View} from 'react-native';
 import {CircleButton} from '@components/CircleButton';
 import { DBContext } from '@providers/FirestoreProvider';
 import { AuthStateContext } from '@providers/AuthProvider';
+import { VerifyInfoScreen } from '@screens/verifyInfo';
 
 
 
@@ -33,24 +34,8 @@ export const HomeScreen= ({navigation}) => {
 
     return (
       <View style={styles.container}>
-        <View style={styles.navbar}>
-          <CircleButton icon={'Home'} label={true}/>
-          <CircleButton icon={'Providers'} label={true}/>
-          {/* <CircleButton style={styles.plus} icon={'Plus'}/> */}
-          <TouchableOpacity
-            style={styles.plus}
-            onPress={() => navigation.navigate('Camera')}
-          >
-            <Image
-              width={40}
-              height={40}
-              source={require('@assets/VectorPlus1_5x.png')}
-            />
-          </TouchableOpacity>
-          <CircleButton icon={'Updates'} label={true}/>
-          <CircleButton icon={'Options'} label={true}/>
+          <VerifyInfoScreen></VerifyInfoScreen>
         </View>
-      </View>
       );
     
 }

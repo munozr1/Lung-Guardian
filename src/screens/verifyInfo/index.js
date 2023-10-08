@@ -5,7 +5,7 @@ import {InputButtonSmall} from '@components/InputButtonSmall';
 import { ButtonLarge } from '@components/ButtonLarge';
 import { DBContext } from '@providers/FirestoreProvider';
 import { LoadingScreen } from '@components/Loading';
-
+import { CheckBoxC } from '@components/CheckBoxC';
 
 export const VerifyInfoScreen= ({navigation}) => {
 
@@ -22,106 +22,130 @@ export const VerifyInfoScreen= ({navigation}) => {
 
     const fields = [
         {
-            placeholder:'Name',
-            label:'Name',
+            placeholder:'Gender',
+            label:'Gender',
             keyboardType:'default',
             hidden:false,
             id: 1,
-            break: false
+            break: false,
+            bool: false
         },
         {
-            placeholder:'Address',
-            label:'Address',
+            placeholder:'Age',
+            label:'Age',
             keyboardType:'default',
             hidden:false,
             id: 2,
-            break: true
+            break: true,
+            bool: false
         },
         {
             break: false ,
             id: 3,
-            label:'Total Amount Due',
-            placeholder:'$0.00',
+            label:'Smoking',
+            bool: true,
+            checked: false,
+            placeholder:'Yes/No',
             keyboardType:"number-pad",
             hidden:false
         },
         {
           id: 4,
-          label: 'Months Usage',
-          placeholder: '380 KWh',
+          label: 'Yellow Finger',
+          bool: true,
+          checked: false,
+          placeholder: 'Yes/No',
           keyboardType: "number-pad",
-            break: true,
+          break: true,
           hidden: false
         },
         {
           id: 5,
-          label: 'Provider',
-          placeholder: 'Circa',
+          label: 'Anxiety',
+          bool: true,
+          checked: false,
+          placeholder: 'Yes/No',
           keyboardType: 'default',
-            break: false ,
+          break: false ,
           hidden: true
         },
         {
           id: 6,
-          label: 'Plan',
-          placeholder: '12 month',
+          label: 'Chronic Diseases',
+          bool: true,
+          checked: false,
+          placeholder: 'Yes/No',
           keyboardType: 'default',
             break: false ,
           hidden: true
         },
         {
           id: 7,
-          label: 'Utility Number',
-          placeholder: '0000000000',
+          label: 'Fatigue',
+          bool: true,
+          checked: false,
+          placeholder: 'Yes/No',
           keyboardType: 'default',
             break: false ,
           hidden: true
         },
         {
             id: 8,
-            label:'Service Period',
-          placeholder:'01/01/2023 to 31/12/2023',
+            label:'Allergy',
+            bool: true,
+            checked: false,
+            placeholder:'Yes/No',
             keyboardType:'default',
             break: false ,
             hidden: true
         },
         {
           id: 9,
-          label: 'Statement Number',
-          placeholder: '01/01/2023 to 31/12/2023',
-            break: true,
+          label: 'Wheezing',
+          bool: true,
+          checked: false,
+          placeholder: 'Yes/No',
+          break: true,
           keyboardType: 'default',
           hidden: true
         },
       {
         break: false,
         id: 10,
-        label: 'Taxes',
-        placeholder: '$0.00',
+        label: 'Alcohol Consumption',
+        bool: true,
+        checked: false,
+        placeholder: 'Yes/No',
         keyboardType: "number-pad",
         hidden: true
       },
       {
         break: false,
         id: 11,
-        label: 'Adjustment',
-        placeholder: '$0.00',
+        label: 'Shortness of Breath',
+        bool: true,
+        checked: false,
+        placeholder: 'Yes/No',
         keyboardType: "number-pad",
         hidden: true
       },
       {
         break: false,
         id: 12,
-        label: 'Trijunction line losses',
-        placeholder: '$0.00',
+        label: 'Swallowing Difficulty',
+        bool: true,
+        checked: false,
+        placeholder: 'Yes/No',
         keyboardType: "number-pad",
         hidden: true
       },
       {
         break: false,
         id: 13,
-        label: 'Electric Supply Charges',
-        placeholder: '$0.00',
+        label: 'Chest pain',
+        bool: true,
+        checked: false,
+        placeholder: 'Yes/No',
         keyboardType: "number-pad",
         hidden: true
       },
@@ -129,6 +153,8 @@ export const VerifyInfoScreen= ({navigation}) => {
         break: false,
         id: 14,
         label: 'Market Charges',
+        bool: true,
+        checked: false,
         placeholder: '$0.00',
         keyboardType: "number-pad",
         hidden: true
@@ -137,20 +163,48 @@ export const VerifyInfoScreen= ({navigation}) => {
         break: true,
         id: 15,
         label: 'UDC Charges',
+        bool: true,
+        checked: false,
         placeholder: '$0.00',
         keyboardType: "number-pad",
         hidden: true
       },
     ] 
 
+    const [checked, setChecked] = useState(false);
+    const handleCheckboxChange = (id) => {
+      console.log("Checkbox Pressed: ", id);
+      fields[id-1].checked = !fields[id-1].checked;
+    };    
+
+    const fieldType = (field) => {
+      if(!field.bool){
+        return(
+          <InputButtonSmall
+            placeholder={field.placeholder}
+            run={onFieldChange}
+            label={field.label}
+            break={field.break}
+            bool={field.bool}
+          />
+        )
+      }else{
+        return(
+          <CheckBoxC
+          label={field.label}
+          checked={field.checked}
+          onpress={() => handleCheckboxChange(field.id -1)}
+          key={field.id}
+          ></CheckBoxC>
+        )
+      }
+    }
+
     const finalize = async () => {
         setLoading(true);
-        setTimeout(() => {
-          
-        }, 1000);
         setProperty({...property, ...formFields});
         console.log("Property: ",property);
-        await uploadImagesToFirestore();
+        // await uploadImagesToFirestore();
         setLoading(false);
         navigation.navigate('Home');
     }
@@ -159,6 +213,9 @@ export const VerifyInfoScreen= ({navigation}) => {
         console.log(formFields[label]);
     }
 
+
+
+
     return (
         <>
         <View style={styles.background}>
@@ -166,16 +223,16 @@ export const VerifyInfoScreen= ({navigation}) => {
             <SafeAreaView >
             <View>
                 <View style={styles.headerContainer}>
-                    <TouchableOpacity
+                    {/* <TouchableOpacity
                     onPress={back}
                     >
                         <Image
                         source={require('@assets/back1x.png')}
                         />
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
                     <View style={styles.headerText}> 
-                        <Text style={styles.headerTitle}>Verify Bill</Text>
-                        <Text style={styles.headerSubheading}>Please Enter missing data before continuing</Text>
+                        <Text style={styles.headerTitle}>New Patient Form</Text>
+                        <Text style={styles.headerSubheading}>Please answer honestly and to the best of your ability</Text>
                     </View> 
                 </View>
             </View>
@@ -184,12 +241,7 @@ export const VerifyInfoScreen= ({navigation}) => {
                   {
                     fields.map((field) => {
                       return(
-                        <InputButtonSmall
-                        placeholder={field.placeholder}
-                        run={onFieldChange}
-                        label={field.label}
-                        break={field.break}
-                        />
+                        fieldType(field)
                       )
                     })
                   }
